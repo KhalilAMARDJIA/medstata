@@ -1,18 +1,239 @@
 ---
-title: Untitled
+title: main title
+subtitle: A simple report that shows the capabilities of quarto and typst
+author: the name of the author
+date: 23 Feb 2024
+lof: true
+version: 0.1
 format:
   medstata-typst: default
+keep-typ: false
+execute:
+  echo: true
+  warning: false
 ---
 
-## Introduction
-
-*TODO* Create an example file that demonstrates the formatting and features of your format.
-
-## More Information
-
-You can learn more about creating custom Typst templates here: 
-
-<https://quarto.org/docs/prerelease/1.4/typst.html#custom-formats>
 
 
 
+# Introduction to Quarto with Typst
+
+This document demonstrates various features of Quarto with R integration, using Typst as the PDF rendering engine. Typst provides a more modern and intuitive alternative to LaTeX for PDF generation.
+
+## Basic Markdown Features
+
+Quarto supports all standard markdown formatting:
+
+- **Bold text** and *italic text*
+- Lists like this one
+- [Hyperlinks](https://quarto.org/)
+- Images, tables, and more
+
+## Mathematical Expressions
+
+You can include inline math like $E = mc^2$ or display equations:
+
+$$
+f(x) = \int_{-\infty}^{\infty} \hat{f}(\xi) e^{2\pi i \xi x} d\xi
+$$
+
+Typst's math syntax is fully compatible with LaTeX math, making the transition seamless.
+
+# Code Execution Features
+
+## Basic R Code
+
+```{r}
+# Simple calculation
+2 + 2
+
+# Creating a vector
+numbers <- c(10, 20, 30, 40, 50)
+mean(numbers)
+```
+
+## Data Visualization
+
+```{r}
+#| label: fig-scatter
+#| fig-cap: "Scatter plot of mpg vs. disp"
+#| fig-width: 8
+#| fig-height: 5
+
+library(ggplot2)
+
+ggplot(mtcars, aes(x = disp, y = mpg)) +
+  geom_point(aes(color = factor(cyl))) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Relationship Between Engine Displacement and Fuel Efficiency",
+    x = "Displacement (cu.in.)",
+    y = "Miles Per Gallon",
+    color = "Cylinders"
+  ) +
+  theme_classic()
+```
+
+## Tables
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics by cylinder count"
+
+library(dplyr)
+library(knitr)
+
+mtcars %>%
+  group_by(cyl) %>%
+  summarize(
+    Count = n(),
+    `Mean MPG` = mean(mpg),
+    `Mean HP` = mean(hp),
+    `Mean Weight` = mean(wt)
+  ) %>%
+  kable()
+```
+
+# Typst-Specific Features
+
+## Custom Styling with Typst
+
+Quarto with Typst allows for custom styling using Typst syntax. You can include raw Typst commands using the `typst` engine:
+
+```{=typst}
+#let highlight(content) = {
+  box(
+    fill: yellow.lighten(80%),
+    inset: (x: 3pt, y: 0pt),
+    outset: (y: 3pt),
+    radius: 2pt,
+    content
+  )
+}
+
+#highlight[This text is highlighted with custom Typst styling!]
+```
+
+## Font Customization
+
+```{=typst}
+#set text(font: "Linux Libertine", size: 11pt)
+
+
+This paragraph will be rendered with Linux Libertine font in the PDF output.
+```
+
+## Advanced Layout with Typst
+
+```{=typst}
+#grid(
+  columns: (1fr, 1fr),
+  gutter: 1em,
+  [
+    #set par(leading: 0.65em)
+    *Column 1*
+    
+    This is content in the first column. Typst makes it easy to create multi-column layouts.
+  ],
+  [
+    #set par(leading: 0.65em)
+    *Column 2*
+    
+    This is content in the second column. You can have different content here.
+  ]
+)
+```
+
+# Standard Quarto Features
+
+## Cross-References
+
+You can reference figures (see @fig-scatter) and tables (see @tbl-summary) using their labels.
+
+## Callouts
+
+::: {.callout-note}
+This is a note callout block.
+:::
+
+::: {.callout-warning}
+This is a warning callout block.
+:::
+
+::: {.callout-tip}
+## Tip with a Title
+This is a tip with a custom title.
+:::
+
+## Tabsets (HTML only)
+
+::: {.panel-tabset}
+### Tab 1
+
+Content for the first tab goes here.
+
+### Tab 2
+
+```{r}
+#| fig-cap: "Distribution of MPG"
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(bins = 10, fill = "steelblue") +
+  theme_classic() +
+  labs(title = "Distribution of MPG")
+```
+
+### Tab 3
+
+Some additional text content.
+:::
+
+Note that tabsets are primarily an HTML feature and may not render the same way in PDF output.
+
+# Plots
+
+##  Plots 
+
+```{r}
+#| warning: false
+#| message: false
+
+
+
+p <- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl), size = hp)) +
+  geom_point(alpha = 0.3) +
+  labs(
+    title = "Interactive Car Data Plot",
+    x = "Weight (1000 lbs)",
+    y = "Miles Per Gallon",
+    color = "Cylinders",
+    size = "Horsepower"
+  ) +
+  theme_classic()
+p
+```
+
+## Data Tables
+
+```{r}
+
+```
+
+Note that interactive elements will only work in the HTML output.
+
+# Typst-Specific YAML Options
+
+This document demonstrates various Typst-specific YAML header options:
+
+- `engine: typst` - Specifies Typst as the PDF rendering engine
+- `typst-template: default` - Uses the default Typst template
+- `margin` - Sets custom page margins
+- `fontsize` - Sets the base font size
+
+# Conclusion
+
+Quarto with Typst provides a powerful system for creating dynamic documents that combine code, results, and narrative text, with the added benefit of modern PDF typesetting. This example showcases just a few of its many features.
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
