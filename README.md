@@ -2,10 +2,9 @@
 
 ## Installing
 
-_TODO_: Replace the `<github-organization>` with your GitHub organization.
 
 ```bash
-quarto use template <github-organization>/medstata
+quarto use template KhalilAMARDJIA/medstata
 ```
 
 This will install the format extension and create an example qmd file
