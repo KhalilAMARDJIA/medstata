@@ -271,19 +271,23 @@ show heading.where(level: 3): it => [
     show outline.entry.where(level: 1): it => [
       #v(0.2em)
       #strong(text(
-        it, 
+        it,
         fill: secondary_color,
         font: secondary_fonts, 
         weight: 500
         ))
     ]
+    show outline.entry: it => [
+      #set text(size: 0.8em)
+      #it
+    ]
+    
     outline(indent: auto, depth: 5, fill: custom_outline_fill)
     
     pagebreak()
   }
   
 
-  // document body
   body
 
   
