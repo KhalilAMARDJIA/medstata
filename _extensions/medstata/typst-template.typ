@@ -259,7 +259,9 @@ show heading.where(level: 3): it => [
   //   // show bibliography: set par(leading: 0.65em, justify: false, linebreaks: auto)
   //   bibliography
   // }
-  
+
+   // page numbering from page 2 (do not count the title page)
+  counter(page).update(1)
   // add table of content
   let custom_outline_fill = box(width: 1fr, repeat(" ."))
   context {

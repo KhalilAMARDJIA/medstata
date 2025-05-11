@@ -20,6 +20,8 @@ execute:
 
 ```{r echo=FALSE}
 library(ggplot2)
+library(tidyverse)
+library(knitr)
 theme_set(ggpubr::theme_pubr())
 ```
 
@@ -45,9 +47,7 @@ Data analysis combines quantitative metrics with qualitative feedback to identif
 ## Basic Survey Statistics
 
 ```{r}
-# Load necessary libraries
-library(tidyverse)
-library(knitr)
+
 
 # Create synthetic patient satisfaction data
 set.seed(123)
@@ -112,7 +112,7 @@ demographics_summary
 #| fig-width: 8
 #| fig-height: 6
 
-library(ggplot2)
+
 
 # Prepare data for visualization
 satisfaction_long <- survey_data %>%
@@ -298,37 +298,6 @@ recommend_table
 
 # Qualitative Feedback Analysis
 
-## Word Cloud of Patient Comments
-
-```{r}
-#| label: fig-wordcloud
-#| fig-cap: "Word cloud of frequent terms in patient feedback"
-#| fig-width: 8
-#| fig-height: 6
-#| eval: false
-
-# Note: This code block is marked as not evaluated (eval: false) as we're 
-# using synthetic data without actual text comments
-
-library(wordcloud)
-library(tm)
-
-# In a real report, this would process actual patient comment text
-# For example:
-# comments <- survey_data$open_text_feedback
-# corpus <- Corpus(VectorSource(comments))
-# corpus <- tm_map(corpus, content_transformer(tolower))
-# corpus <- tm_map(corpus, removePunctuation)
-# corpus <- tm_map(corpus, removeWords, stopwords("english"))
-# tdm <- TermDocumentMatrix(corpus)
-# m <- as.matrix(tdm)
-# word_freqs <- sort(rowSums(m), decreasing = TRUE)
-# wordcloud(words = names(word_freqs), freq = word_freqs, min.freq = 3,
-#          max.words = 100, random.order = FALSE, colors = brewer.pal(8, "Blues"))
-
-# Instead, display a message about qualitative analysis
-knitr::asis_output("*Note: In the full report, this section would contain a word cloud visualization of actual patient comments. The most frequent terms in patient feedback include 'accurate', 'convenient', 'battery life', 'comfortable', and 'alerts'.*")
-```
 
 ## Key Themes from Patient Feedback
 
