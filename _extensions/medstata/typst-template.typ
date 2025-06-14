@@ -1,11 +1,11 @@
 
-#let dark_blue = rgb(0, 58, 104)
-#let light_blue = rgb("#00cae7")
+#let dark_blue = rgb(0, 85, 165)
+#let light_blue = dark_blue.lighten(90%).saturate(10%)
 
 // color palette settings
 #let main_color = light_blue
 #let secondary_color = dark_blue
-#let accent_color = rgb("#4ddd55")
+#let accent_color = rgb(0, 153, 99)
 #let cover_page_color = main_color.rotate(180deg).rotate(180deg).desaturate(50%)
 // fonts settings
 #let dark_text = rgb(15, 10, 10)

@@ -22,7 +22,26 @@ execute:
 library(ggplot2)
 library(tidyverse)
 library(knitr)
-theme_set(ggpubr::theme_pubr())
+
+theme_baseR <- function(base_size = 12) {
+  theme_classic(base_size = base_size) %+replace%
+    theme(
+      panel.grid = element_blank(),
+      panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5),
+      axis.line = element_blank(),
+      axis.ticks = element_line(color = "black"),
+      plot.title = element_text(
+        hjust = 0.5,
+        face = "bold",
+        margin = margin(b = 20, t = 10)  # space above and below title text
+      ),
+      plot.margin = unit(c(1.5, 1.5, 1, 1.5), "lines"),  # Top, Right, Bottom, Left
+      plot.title.position = "plot"
+    )
+}
+
+# Set it
+theme_set(theme_baseR())
 ```
 
 # Introduction to Patient Satisfaction Analysis
@@ -382,6 +401,34 @@ ggplot(usage_by_hour, aes(x = hour, y = usage_count)) +
     x = "Hour of Day (24h format)",
     y = "Number of App Accesses"
   ) 
+```
+
+# Base R plot for comparison
+
+```{r}
+# Base R version of the ggplot2 visualization
+
+# Extract data
+x <- usage_by_hour$hour
+y <- usage_by_hour$usage_count
+
+# Set up plot
+plot(
+  x, y,
+  type = "o",                    # 'o' for overplotted points and lines
+  col = "steelblue",
+  pch = 16,                      # Solid point
+  lwd = 2,                       # Line width
+  cex = 1.5,                     # Point size
+  xaxt = "n",                    # Custom x-axis
+  xlab = "Hour of Day (24h format)",
+  ylab = "Number of App Accesses",
+  main = "HomeCare+ CGM App Usage by Time of Day"
+)
+
+# Add custom x-axis ticks
+axis(1, at = seq(0, 23, by = 3))
+
 ```
 
 # Cross-References and Callouts
