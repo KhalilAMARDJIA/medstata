@@ -141,7 +141,7 @@
       [Version : #version_box(version)]
     },
     [],
-    align(counter(page).display("1 of 1", both: true), right),
+    // align(counter(page).display("1 of 1", both: true), right),
   ))
 
 
@@ -226,7 +226,7 @@ show heading.where(level: 3): it => [
 
   // Table settings
 
-  show figure.where(kind: table): set figure.caption (position: top)
+  show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: table): set block(breakable: true)
   show table.cell : set text(size: 0.8em)
   show figure.where(kind: "quarto-float-tbl"): set block(breakable: true)
@@ -284,7 +284,7 @@ show heading.where(level: 3): it => [
       #it
     ]
     
-    outline(indent: auto, depth: 5, fill: custom_outline_fill)
+    outline(indent: auto, depth: 5)
     
     pagebreak()
   }
@@ -300,23 +300,23 @@ show heading.where(level: 3): it => [
   outline(
     title: [List of Figures],
     target: figure.where(kind: "quarto-float-fig"),
-    fill: custom_outline_fill,
+   
   )
     outline(
     title: none,
     target: figure.where(kind: image),
-    fill: custom_outline_fill,
+
   )
   pagebreak()
   outline(
     title: [List of Tables],
     target: figure.where(kind: "quarto-float-tbl"),
-    fill: custom_outline_fill
+
   )
     outline(
     title: none,
     target: figure.where(kind: table),
-    fill: custom_outline_fill
+
   )
 
   }

@@ -321,7 +321,7 @@ recommend_table
 ## Key Themes from Patient Feedback
 
 ```{=typst}
-#set text(font: "Linux Libertine", size: 11pt)
+
 
 #table(
   columns: (auto, auto),
