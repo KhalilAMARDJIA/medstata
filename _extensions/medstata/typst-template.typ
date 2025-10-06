@@ -1,11 +1,11 @@
 
 #let dark_blue = rgb(0, 85, 165)
-#let light_blue = dark_blue.lighten(90%).saturate(10%)
+#let light_blue = dark_blue.lighten(90%).desaturate(10%).rotate(180deg)
 
 // color palette settings
 #let main_color = light_blue
 #let secondary_color = dark_blue
-#let accent_color = rgb(0, 153, 99)
+#let accent_color = rgb("#09c482")
 #let cover_page_color = main_color.rotate(180deg).rotate(180deg).desaturate(50%)
 // fonts settings
 #let dark_text = rgb(15, 10, 10)
@@ -30,10 +30,12 @@
 #let blockquote(body) = {
   block(
     width: 100%,
-    fill: accent_color.lighten(95%),
-    inset: 2em,
+    fill: dark_blue.lighten(95%),
+    inset: (top: 1em, bottom: 1em, left: -3em, right: -3em),
+    outset: (top: 0em, bottom: 0em, left: 3em, right: 3em),
+    radius: 0.3em,
     stroke: (
-      left: (paint: accent_color.lighten(50%), thickness: 3pt, dash: "solid"),
+      left: (paint: dark_blue, thickness: 3pt, dash: "solid"),
     ),
 
     body,
@@ -41,7 +43,7 @@
 }
 
 #show quote: it => {
-  blockquote(it)
+  blockquote(text(it, size: 0.9em, weight: 300, font: secondary_fonts, fill: dark_text))
 }
 
 #let report(
@@ -133,6 +135,7 @@
 
   // Footer settings
   // Configure footer
+  
   set page(footer: grid(
     columns: (1fr, 1fr, 1fr),
     align: (left, center, right),
@@ -141,7 +144,7 @@
       [Version : #version_box(version)]
     },
     [],
-    // align(counter(page).display("1 of 1", both: true), right),
+    context {counter(page).display("1 of 1", both: true)},
   ))
 
 
@@ -175,6 +178,18 @@
     #h(0.3em)
   ]
 
+  // cross-reference settings
+  show ref: it =>[
+    #set text(weight: "regular")
+    #box(
+      [#it],
+          stroke: (
+      bottom: (paint: accent_color, thickness: 0.1em, dash: "solid"),
+    ),
+      fill: main_color.lighten(50%),
+    )
+  ]
+
   // Headings settings
   set heading(numbering: "1.1.")
 
@@ -184,31 +199,32 @@
     #block(
       smallcaps(it),
       inset: (top: 0.5em, bottom: 0.5em, rest: 0em),
+      
 
     )
-    #v(1.1em)
+
   ]
     show heading.where(level: 2): it => [
-    #set text(fill: main_color.darken(50%), weight: 500, size: 1.1em, font: secondary_fonts)
+    #set text(fill: accent_color.darken(50%), weight: 500, size: 1.1em, font: secondary_fonts)
 
     #block(
-      smallcaps(it),
+      underline(smallcaps(it)),
       inset: (top: 0.5em, bottom: 0.5em, rest: 0em),
 
     )
-    #v(1em)
+
   ]
 
  
 show heading.where(level: 3): it => [
-    #set text(fill: main_color.darken(50%), weight: 400, size: 1em, font: secondary_fonts)
+    #set text(fill: dark_blue.darken(50%), weight: 400, size: 1em, font: secondary_fonts)
 
     #block(
       smallcaps(it),
       inset: (top: 0.5em, bottom: 0.5em, rest: 0em),
 
     )
-    #v(0.8em)
+
   ]
 
 
@@ -239,7 +255,7 @@ show heading.where(level: 3): it => [
       if (calc.odd(y)) {
         return accent_color.lighten(90%).desaturate(90%);
       } else if (y == 0) {
-        return main_color.lighten(80%).desaturate(50%);
+        return main_color.lighten(10%).desaturate(5%);
       }
     },
     inset: 0.7em,
