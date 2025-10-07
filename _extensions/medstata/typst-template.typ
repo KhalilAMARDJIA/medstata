@@ -11,7 +11,7 @@
 #let dark_text = rgb(15, 10, 10)
 #let cover_page_text = main_color.negate().saturate(10%).rotate(180deg)
 
-#let main_fonts = ("STIX Two Text")
+#let main_fonts = ("CMU Concrete","STIX Two Text")
 #let secondary_fonts = ("IBM Plex Sans")
 
 #let cover_page_line = cover_page_color.saturate(99%).rotate(180deg).negate().transparentize(50%)
@@ -237,7 +237,7 @@ show heading.where(level: 3): it => [
   // Figure settings
   show figure.caption: it =>{
     set text(fill: cover_page_text, weight: 400, size: 1.1em)
-    block(it, inset: 1em)
+    block(it, inset: 0.65em)
   }
 
   // Table settings
