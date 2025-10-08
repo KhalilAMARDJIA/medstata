@@ -11,7 +11,7 @@
 #let dark_text = rgb(15, 10, 10)
 #let cover_page_text = main_color.negate().saturate(10%).rotate(180deg)
 
-#let main_fonts = ("CMU Concrete","STIX Two Text")
+#let main_fonts = ( "CMU Concrete", "STIX Two Text")
 #let secondary_fonts = ("IBM Plex Sans")
 
 #let cover_page_line = cover_page_color.saturate(99%).rotate(180deg).negate().transparentize(50%)
@@ -130,7 +130,7 @@
   // Paragraph settings
   set par(justify: true, leading : 0.6em)
   set block(spacing: 1.5em) // space between paragraphs
-  set text(font: main_fonts, size: 11pt, weight: 300, hyphenate: false, spacing : 100%)
+  set text(font: main_fonts, size: 10pt, weight: 300, hyphenate: false, spacing : 100%)
   show raw: set text(size: 0.8em, font: "Iosevka NFM") 
 
   // Footer settings
@@ -237,7 +237,7 @@ show heading.where(level: 3): it => [
   // Figure settings
   show figure.caption: it =>{
     set text(fill: cover_page_text, weight: 400, size: 1.1em)
-    block(it, inset: 0.65em)
+    block(it, inset: 1em)
   }
 
   // Table settings
@@ -278,32 +278,43 @@ show heading.where(level: 3): it => [
 
    // page numbering from page 2 (do not count the title page)
   counter(page).update(1)
+
+
   // add table of content
-  let custom_outline_fill = box(width: 1fr, repeat(" ."))
-  context {
-    show outline.entry: it =>{
-    text([#it], size: 1em)
-  }
-    
+  let custom_outline_fill = box(width: 1fr, repeat("  . "))
+
+context {
+  let custom_outline_fill = box(width: 1fr, repeat("  . "))
+
+  set outline(title: "Table of Contents")
+  set outline.entry(fill: custom_outline_fill)
   
-    show outline.entry.where(level: 1): it => [
-      #v(0.2em)
-      #strong(text(
-        it,
-        fill: secondary_color,
-        font: secondary_fonts, 
-        weight: 500
-        ))
-    ]
-    show outline.entry: it => [
-      #set text(size: 0.8em)
-      #it
-    ]
-    
-    outline(indent: auto, depth: 5)
-    
-    pagebreak()
+  // Set tight spacing for all entries
+  show outline.entry: set block(spacing: 0.4em)
+  
+  // Add extra spacing only before level 1 entries (except the first one)
+  show outline.entry.where(level: 1): set block(above: 1.2em)
+  
+  // Hide the fill for level 1 entries
+  show outline.entry.where(level: 1): it => {
+    show repeat: none
+    text(
+      it,
+      fill: secondary_color,
+      font: secondary_fonts, 
+      weight: 600
+    )
   }
+  
+  show outline.entry: it => [
+    #set text(size: 1em)
+    #it
+  ]
+
+  outline(indent: auto, depth: 5)
+  
+  pagebreak()
+}
   
 
   body
