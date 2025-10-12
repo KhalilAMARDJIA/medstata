@@ -79,6 +79,8 @@ This template includes code chunks for data generation, analysis, and visualizat
 
 # Introduction
 
+{{< lipsum 3 >}}
+
 ## Background
 
 This section demonstrates how to structure your introduction with clear objectives and context.
@@ -157,6 +159,7 @@ ggplot(study_data, aes(x = treatment_group, y = outcome_score, fill = treatment_
 ```
 
 The primary analysis (@fig-outcomes) demonstrates the distribution of outcome scores across treatment groups.
+Also we can try to link to quarto website [here](https://quarto.org).
 
 ## Statistical Analysis with Confidence Intervals
 
