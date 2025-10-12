@@ -1,6 +1,6 @@
 
 #let dark_blue = rgb(0, 85, 165)
-#let light_blue = dark_blue.lighten(90%).desaturate(10%).rotate(180deg)
+#let light_blue = dark_blue.lighten(90%).desaturate(10%).rotate(270deg)
 
 // color palette settings
 #let main_color = light_blue
@@ -236,35 +236,34 @@ show heading.where(level: 3): it => [
 
   // Figure settings
   show figure.caption: it =>{
-    set text(fill: cover_page_text, weight: 400, size: 1.1em)
-    block(it, inset: 1em)
+    set text(fill: cover_page_text, weight: 400, size: 1em)
+    block(it, inset: (left: 5em, right: 5em, top: 0em, bottom: 0em))
   }
 
   // Table settings
 
   show figure.where(kind: table): set figure.caption(position: top)
-  show figure.where(kind: table): set block(breakable: true)
+  show figure.where(kind: table): set block(breakable: false)
   show table.cell : set text(size: 0.8em)
   show figure.where(kind: "quarto-float-tbl"): set block(breakable: true)
   show figure.where(kind: "quarto-float-tbl"): set table.header(repeat: true) 
 
+  
   set table(
-
-    // Increase the table cell's padding
-    fill: (_, y) => {
-      if (calc.odd(y)) {
-        return accent_color.lighten(90%).desaturate(90%);
-      } else if (y == 0) {
-        return main_color.lighten(10%).desaturate(5%);
-      }
-    },
-    inset: 0.7em,
-    stroke: (_, y) => (
-      x: 0.2pt,
-      top: if y <= 1 { 0.5pt } else { 0pt },
-      bottom: 0.5pt,
-    ),
+  fill: (_, y) => {
+    if calc.odd(y) {
+      return accent_color.lighten(90%).desaturate(90%);
+    } else if y == 0 {
+      return main_color.lighten(10%).desaturate(5%);
+    }
+  },
+  inset: 0.7em,
+  stroke: (x, y) => (
+    x: none,
+    top: if y <= 1 { 0.5pt } else { 0pt },
+    bottom: 0.5pt, 
   )
+)
 
   
   // // Display bibliography.
@@ -280,7 +279,7 @@ show heading.where(level: 3): it => [
   counter(page).update(1)
 
 
-  // add table of content
+  // add table of contents
   let custom_outline_fill = box(width: 1fr, repeat("  . "))
 
 context {
@@ -305,9 +304,10 @@ context {
       weight: 600
     )
   }
+
   
   show outline.entry: it => [
-    #set text(size: 1em)
+    #set text(size: 0.9em)
     #it
   ]
 
