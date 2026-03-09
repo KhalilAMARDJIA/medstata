@@ -1,6 +1,7 @@
 # Quarto output and cache
 _freeze/
 .quarto/
+*_files/
 *.pdf
 *.html
 *.docx
