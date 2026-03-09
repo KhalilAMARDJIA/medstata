@@ -5,7 +5,6 @@ author: "Your Name"
 date: today
 lof: true  # List of Figures
 lot: true  # List of Tables
-toc: true  # Table of Contents
 version: 1.0
 format:
   medstata-typst: default

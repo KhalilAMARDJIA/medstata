@@ -1,0 +1,16 @@
+# Quarto output and cache
+_freeze/
+.quarto/
+*.pdf
+*.html
+*.docx
+
+# Intermediate Typst files
+*.typ
+!_extensions/**/*.typ
+
+# R environment
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
