@@ -24,16 +24,42 @@ Quarto `>= 1.7.0` is required.
 
 ### Fonts
 
-The following fonts must be installed on your system:
+The template uses a font fallback chain so it renders on any platform without requiring manual installs. Preferred fonts produce the best results; install them for the intended appearance.
 
-| Font | Used for |
-|---|---|
-| [CMU Concrete](https://fontsource.org/fonts/cmu-concrete) | Body text (primary) |
-| [STIX Two Text](https://github.com/stipub/stixfonts) | Body text (fallback) |
-| [IBM Plex Sans](https://github.com/IBM/plex) | Headings and UI elements |
-| [Iosevka NFM](https://github.com/ryanoasis/nerd-fonts) | Code blocks |
+**Body text (Serif)**
 
-If a font is not found, Typst will fall back silently to a system font.
+| Priority | Font | Platform |
+|---|---|---|
+| 1 | [CMU Concrete](https://fontsource.org/fonts/cmu-concrete) | all (manual install) |
+| 2 | [STIX Two Text](https://github.com/stipub/stixfonts) | all (manual install) |
+| 3 | Times New Roman | Windows / macOS (built-in) |
+| 4 | Georgia | Windows / macOS (built-in) |
+| 5 | Liberation Serif | Linux (most distros) |
+| 6 | DejaVu Serif | Linux |
+| 7 | FreeSerif | Linux (GNU FreeFont) |
+
+**Headings / UI (Sans-serif)**
+
+| Priority | Font | Platform |
+|---|---|---|
+| 1 | [IBM Plex Sans](https://github.com/IBM/plex) | all (manual install) |
+| 2 | Calibri | Windows (built-in) |
+| 3 | Segoe UI | Windows (built-in) |
+| 4 | Liberation Sans | Linux (most distros) |
+| 5 | DejaVu Sans | Linux |
+| 6 | FreeSans | Linux (GNU FreeFont) |
+| 7 | Arial | Windows / macOS / some Linux |
+
+**Code blocks (Monospace)**
+
+| Priority | Font | Platform |
+|---|---|---|
+| 1 | [Iosevka NFM](https://github.com/ryanoasis/nerd-fonts) | all (manual install) |
+| 2 | Consolas | Windows (built-in) |
+| 3 | Liberation Mono | Linux (most distros) |
+| 4 | DejaVu Sans Mono | Linux |
+| 5 | FreeMono | Linux (GNU FreeFont) |
+| 6 | Courier New | Windows / macOS / some Linux |
 
 ## Using
 

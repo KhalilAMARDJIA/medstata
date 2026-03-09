@@ -38,10 +38,50 @@
 // ============================================================================
 // FONT CONFIGURATION
 // ============================================================================
+//
+// Each list is ordered by preference. Typst tries fonts left-to-right and
+// uses the first one found on the system.
+//
+//  Serif (body)     — CMU Concrete / STIX Two Text (preferred)
+//                     Windows  : Times New Roman, Georgia
+//                     Linux    : Liberation Serif, DejaVu Serif, FreeSerif
+//
+//  Sans-serif (UI)  — IBM Plex Sans (preferred)
+//                     Windows  : Calibri, Segoe UI, Arial
+//                     Linux    : Liberation Sans, DejaVu Sans, FreeSans
+//
+//  Monospace (code) — Iosevka NFM (preferred)
+//                     Windows  : Consolas, Courier New
+//                     Linux    : Liberation Mono, DejaVu Sans Mono, FreeMono
 
-#let main_fonts = ("CMU Concrete", "STIX Two Text")  // Body text fonts
-#let secondary_fonts = "IBM Plex Sans"              // Headers and UI elements
-#let code_fonts = "Iosevka NFM"                     // Code blocks
+#let main_fonts = (
+  "CMU Concrete",       // preferred (all platforms, manual install)
+  "STIX Two Text",      // preferred fallback (all platforms, manual install)
+  "Times New Roman",    // Windows / macOS built-in
+  "Georgia",            // Windows / macOS built-in
+  "Liberation Serif",   // Linux (most distros)
+  "DejaVu Serif",       // Linux
+  "FreeSerif",          // Linux (GNU FreeFont)
+)
+
+#let secondary_fonts = (
+  "IBM Plex Sans",      // preferred (all platforms, manual install)
+  "Calibri",            // Windows built-in
+  "Segoe UI",           // Windows built-in
+  "Liberation Sans",    // Linux (most distros)
+  "DejaVu Sans",        // Linux
+  "FreeSans",           // Linux (GNU FreeFont)
+  "Arial",              // Windows / macOS / some Linux
+)
+
+#let code_fonts = (
+  "Iosevka NFM",        // preferred (all platforms, manual install)
+  "Consolas",           // Windows built-in
+  "Liberation Mono",    // Linux (most distros)
+  "DejaVu Sans Mono",   // Linux
+  "FreeMono",           // Linux (GNU FreeFont)
+  "Courier New",        // Windows / macOS / some Linux
+)
 
 // ============================================================================
 // HELPER FUNCTIONS
