@@ -28,7 +28,7 @@
 #let main_color = light_blue              // Primary background and accents
 #let secondary_color = dark_blue          // Headers and emphasis
 #let accent_color = rgb("#09c482")        // Highlights and interactive elements
-#let cover_page_color = main_color.rotate(180deg).rotate(180deg).desaturate(50%)
+#let cover_page_color = main_color.desaturate(50%)
 
 // Text colors
 #let dark_text = rgb(15, 10, 10)          // Body text
@@ -111,6 +111,7 @@
 /// - bibliography: Bibliography file path (optional)
 /// - lof: Display list of figures (boolean, default: false)
 /// - lot: Display list of tables (boolean, default: false)
+/// - bibliography: A bibliography value created with `bibliography()` (optional)
 /// - body: Main document content (required)
 #let report(
   title: [Add title],
@@ -490,33 +491,44 @@
   body
 
   // ==========================================================================
+  // BIBLIOGRAPHY
+  // ==========================================================================
+
+  if bibliography != none {
+    pagebreak()
+    bibliography
+  }
+
+  // ==========================================================================
   // LIST OF FIGURES AND TABLES
   // ==========================================================================
 
-  context {
-    pagebreak()
+  if lof {
+    context {
+      pagebreak()
+      outline(
+        title: [List of Figures],
+        target: figure.where(kind: "quarto-float-fig"),
+      )
+      outline(
+        title: none,
+        target: figure.where(kind: image),
+      )
+    }
+  }
 
-    // List of Figures
-    outline(
-      title: [List of Figures],
-      target: figure.where(kind: "quarto-float-fig"),
-    )
-    outline(
-      title: none,
-      target: figure.where(kind: image),
-    )
-
-    pagebreak()
-
-    // List of Tables
-    outline(
-      title: [List of Tables],
-      target: figure.where(kind: "quarto-float-tbl"),
-    )
-    outline(
-      title: none,
-      target: figure.where(kind: table),
-    )
+  if lot {
+    context {
+      pagebreak()
+      outline(
+        title: [List of Tables],
+        target: figure.where(kind: "quarto-float-tbl"),
+      )
+      outline(
+        title: none,
+        target: figure.where(kind: table),
+      )
+    }
   }
 }
 
