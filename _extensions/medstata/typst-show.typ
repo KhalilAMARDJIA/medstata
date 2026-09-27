@@ -15,6 +15,9 @@ $endif$
 $if(author)$
   author: [$author$],
 $endif$
+$if(short-title)$
+  short-title: [$short-title$],
+$endif$
 $if(logo)$
   logo: "$logo$",
 $endif$
@@ -23,9 +26,6 @@ $if(date)$
 $endif$
 $if(version)$
   version: [$version$],
-$endif$
-$if(bibliography)$
-  bibliography: bibliography("$bibliography$"),
 $endif$
 $if(lof)$
   lof: $lof$,

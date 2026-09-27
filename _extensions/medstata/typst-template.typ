@@ -11,97 +11,86 @@
 // - Automated table of contents with hierarchical styling
 // - List of figures and tables
 // - Professional color scheme with customizable branding
-// - Responsive table styling with alternating row colors
-// - Cross-reference support with custom styling
-// - Multi-level heading hierarchy
+// - Tables with a tinted header row, hairline row rules and a closing rule;
+//   long tables break between rows and repeat their header
+// - Section numbers hung in the left margin, sans headings
+// - AMA superscript citations in bold navy
+// - PDF metadata (title, author) and an optional short running title
 // ============================================================================
 
 // ============================================================================
 // COLOR PALETTE CONFIGURATION
+// Stata s2color / journal scheme — the de-facto standard in academic
+// medical statistics. Muted, warm-cool balanced, institutional.
 // ============================================================================
+
+
 
 // Base colors
-#let dark_blue = rgb(0, 85, 165)
-#let light_blue = dark_blue.lighten(90%).desaturate(10%).rotate(270deg)
+#let dark_navy  = rgb("#1a476f")   // Stata navy   — primary
+#let light_bg   = rgb("#f9f9f7")   // Soft neutral paper tint
 
-// Theme colors - customize these to match your brand
-#let main_color = light_blue              // Primary background and accents
-#let secondary_color = dark_blue          // Headers and emphasis
-#let accent_color = rgb("#09c482")        // Highlights and interactive elements
-#let cover_page_color = main_color.desaturate(50%)
+// Theme colors
+#let main_color       = light_bg              // Backgrounds and subtle accents
+#let secondary_color  = dark_navy             // Headers, borders, emphasis
+#let accent_color     = rgb("#6e8e84")        // Stata teal — highlights
+#let cover_page_color = rgb("#0d2b42")        // Deep navy — cover background
 
 // Text colors
-#let dark_text = rgb(15, 10, 10)          // Body text
-#let cover_page_text = main_color.negate().saturate(10%).rotate(180deg)
-#let cover_page_line = cover_page_color.saturate(99%).rotate(180deg).negate().transparentize(50%)
+#let dark_text        = rgb("#1a1a1a")        // Near-black body text
+#let cover_page_text  = light_bg       // Light slate on dark cover
+#let cover_page_line  = rgb("#6e8e84").transparentize(30%)  // Muted teal rule
 
 // ============================================================================
-// FONT CONFIGURATION
+// FONT CONFIGURATION: Libertinus Serif body, IBM Plex for the apparatus
 // ============================================================================
-//
-// Each list is ordered by preference. Typst tries fonts left-to-right and
-// uses the first one found on the system.
-//
-//  Serif (body)     — CMU Concrete / STIX Two Text (preferred)
-//                     Windows  : Times New Roman, Georgia
-//                     Linux    : Liberation Serif, DejaVu Serif, FreeSerif
-//
-//  Sans-serif (UI)  — IBM Plex Sans (preferred)
-//                     Windows  : Calibri, Segoe UI, Arial
-//                     Linux    : Liberation Sans, DejaVu Sans, FreeSans
-//
-//  Monospace (code) — Iosevka NFM (preferred)
-//                     Windows  : Consolas, Courier New
-//                     Linux    : Liberation Mono, DejaVu Sans Mono, FreeMono
 
-#let main_fonts = (
-  "CMU Concrete",       // preferred (all platforms, manual install)
-  "STIX Two Text",      // preferred fallback (all platforms, manual install)
-  "Times New Roman",    // Windows / macOS built-in
-  "Georgia",            // Windows / macOS built-in
-  "Liberation Serif",   // Linux (most distros)
-  "DejaVu Serif",       // Linux
-  "FreeSerif",          // Linux (GNU FreeFont)
+#let main_fonts      = ("Libertinus Serif", "IBM Plex Serif")   // Body text
+#let secondary_fonts = ("Libertinus Serif", "IBM Plex Serif")   // Running head, footer, cover
+#let code_fonts      = ("IBM Plex Mono", "Libertinus Mono")                      // Code blocks
+
+// ============================================================================
+// DESIGN TOKENS (ms-*): used by headings, tables and captions, and available
+// to documents in raw typst blocks (e.g. `fill: ms-tint`)
+// ============================================================================
+
+#let ms-ink        = dark_text
+#let ms-petrol     = dark_navy                // headings, rules, citations, links
+#let ms-signal     = dark_navy                // one accent colour
+#let ms-muted      = rgb("#5B676C")           // running head, footer, meta lines
+#let ms-rule       = rgb("#C9D3DD")           // table row rules
+#let ms-tint       = rgb("#EEF2F6")           // table header ground
+#let ms-code-tint  = rgb("#F2F2EF")           // search-string panels: barely off the page tint
+#let ms-serif      = main_fonts
+#let ms-sans       = ("IBM Plex Sans", "Libertinus Sans")
+#let ms-sans-semi  = ("IBM Plex Sans SmBld", "IBM Plex Sans")
+#let ms-mono       = ("IBM Plex Mono", "Libertinus Mono")
+#let ms-body-size  = 10pt
+#let ms-table-size = 8.5pt
+#let ms-margin     = (bottom: 2.5cm, left: 2.5cm, right: 2.5cm, top: 2.5cm)
+#let ms-hang       = 14mm      // section numbers sit in the margin, right-aligned to this
+#let ms-hang-gap   = 3.5mm
+#let ms-keep-table = 7cm       // captioned tables shorter than this never break
+
+// Number hung in the left margin, baseline-aligned with the heading text.
+#let ms-hung(num) = place(
+  left, dx: -ms-hang,
+  box(width: ms-hang - ms-hang-gap, align(right, num)),
 )
 
-#let secondary_fonts = (
-  "IBM Plex Sans",      // preferred (all platforms, manual install)
-  "Calibri",            // Windows built-in
-  "Segoe UI",           // Windows built-in
-  "Liberation Sans",    // Linux (most distros)
-  "DejaVu Sans",        // Linux
-  "FreeSans",           // Linux (GNU FreeFont)
-  "Arial",              // Windows / macOS / some Linux
-)
-
-#let code_fonts = (
-  "Iosevka NFM",        // preferred (all platforms, manual install)
-  "Consolas",           // Windows built-in
-  "Liberation Mono",    // Linux (most distros)
-  "DejaVu Sans Mono",   // Linux
-  "FreeMono",           // Linux (GNU FreeFont)
-  "Courier New",        // Windows / macOS / some Linux
-)
+// Plain text of a content value (PDF metadata, tests on heading text).
+#let ms-plain(c) = {
+  if type(c) == str { c }
+  else if c.has("text") { c.text }
+  else if c.has("children") { c.children.map(ms-plain).join("") }
+  else if c.has("body") { ms-plain(c.body) }
+  else if c == [ ] { " " }
+  else { "" }
+}
 
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
-
-/// Version box component
-/// Displays version information with styled background
-///
-/// Parameters:
-/// - body: Content to display (typically version number)
-#let version_box(body) = {
-  box(
-    fill: main_color.lighten(90%),
-    inset: 0.1em,
-    outset: 0.1em,
-    stroke: (paint: main_color, thickness: 0.3pt, dash: "solid"),
-    radius: 0.3em,
-    body,
-  )
-}
 
 /// Blockquote styling
 /// Creates a styled quote block with left border accent
@@ -111,12 +100,12 @@
 #let blockquote(body) = {
   block(
     width: 100%,
-    fill: dark_blue.lighten(95%),
+    fill: dark_navy.lighten(95%),
     inset: (top: 1em, bottom: 1em, left: -3em, right: -3em),
     outset: (top: 0em, bottom: 0em, left: 3em, right: 3em),
     radius: 0.3em,
     stroke: (
-      left: (paint: dark_blue, thickness: 3pt, dash: "solid"),
+      left: (paint: dark_navy, thickness: 3pt, dash: "solid"),
     ),
     body,
   )
@@ -128,7 +117,7 @@
     text(
       it,
       size: 0.9em,
-      weight: 300,
+      weight: 400,
       font: secondary_fonts,
       fill: dark_text,
     ),
@@ -148,19 +137,18 @@
 /// - logo: Path to logo image (optional)
 /// - date: Report date (optional, defaults to current date)
 /// - version: Version number (optional)
-/// - bibliography: Bibliography file path (optional)
+/// - short-title: Running header text (optional, defaults to the title)
 /// - lof: Display list of figures (boolean, default: false)
 /// - lot: Display list of tables (boolean, default: false)
-/// - bibliography: A bibliography value created with `bibliography()` (optional)
 /// - body: Main document content (required)
 #let report(
   title: [Add title],
   subtitle: none,
+  short-title: none,
   author: [Add author],
   logo: none,
   date: none,
   version: none,
-  bibliography: none,
   lof: false,
   lot: false,
   body,
@@ -169,6 +157,11 @@
   // DOCUMENT SETUP
   // ==========================================================================
 
+  // PDF metadata: the subtitle is the descriptive title when there is one
+  set document(
+    title: if subtitle != none { subtitle } else { title },
+    author: ms-plain(author),
+  )
   set page(paper: "a4")
   set text(hyphenate: false)
   set par(justify: true)
@@ -263,7 +256,7 @@
 
           // Author
           text(
-            size: 1.3em,
+            size: 1em,
             fill: cover_page_text,
             weight: 200,
             font: main_fonts,
@@ -274,7 +267,7 @@
 
           // Date
           text(
-            size: 1.3em,
+            size: 1em,
             fill: cover_page_text,
             weight: 400,
             font: main_fonts,
@@ -291,27 +284,50 @@
   // PAGE LAYOUT AND TYPOGRAPHY
   // ==========================================================================
 
-  // Page margins for content pages
-  set page(margin: (bottom: 4cm, left: 2.5cm, right: 2.5cm, top: 2.5cm))
+  // Page margins, full-page tint, and running header
+  set page(
+    margin: ms-margin,
+    background: rect(fill: light_bg, width: 100%, height: 100%),
+    header: context {
+      // Running chapter: the level-1 heading that starts on this page, else the last one before it
+      let here-page = here().page()
+      let hs = query(heading.where(level: 1)).filter(h => h.location().page() <= here-page)
+      let on-page = hs.filter(h => h.location().page() == here-page)
+      let chapter = if on-page.len() > 0 { on-page.first() } else if hs.len() > 0 { hs.last() } else { none }
+      set text(size: 7.5pt, fill: accent_color.darken(20%), font: secondary_fonts, weight: 400)
+      grid(
+        columns: (1fr, auto),
+        align: (left + bottom, right + bottom),
+        if chapter != none {
+          if chapter.numbering != none [#counter(heading).at(chapter.location()).first()#h(0.5em)]
+          chapter.body
+        },
+        [#upper(if short-title != none { short-title } else { title })#if version != none [ #h(0.6em) | #h(0.6em) v#version ]],
+      )
+      v(-0.6em)
+      line(length: 100%, stroke: 0.4pt + accent_color)
+    },
+  )
 
   // Paragraph settings
   set par(
     justify: true,
-    leading: 0.6em, // Space between lines
+    leading: 0.65em, // Space between lines
+    spacing: 1.5em,  // Space between paragraphs
   )
-  set block(spacing: 1.5em) // Space between paragraphs
+  set block(spacing: 1.2em)
 
   // Text settings
   set text(
     font: main_fonts,
     size: 10pt,
-    weight: 300,
+    weight: 400,
     hyphenate: false,
     spacing: 100%,
   )
 
   // Code block styling
-  show raw: set text(size: 0.8em, font: code_fonts)
+  show raw: set text(font: ms-mono, size: 1.1em)  // typst already scales raw to 0.8em
 
   // ==========================================================================
   // FOOTER CONFIGURATION
@@ -323,19 +339,18 @@
       align: (left, center, right),
       gutter: 0.5em,
 
-      // Version box (left)
-      if version != none {
-        [Version: #version_box(version)]
-      },
+      // Author (left)
+      text(size: 7.5pt, fill: ms-muted, font: secondary_fonts)[#author],
 
       // Center (empty)
       [],
 
       // Page numbering (right)
-      context {
-        counter(page).display("1 of 1", both: true)
-      },
+      context text(size: 7.5pt, fill: ms-muted, font: secondary_fonts)[
+        Page #counter(page).display() of #counter(page).final().first()
+      ],
     ),
+
   )
 
   // ==========================================================================
@@ -351,6 +366,8 @@
     marker: ([•], [--], [○], [‣]), // Multi-level markers
   )
 
+  show list: set par(justify: false)
+
   // Numbered list settings
   set enum(
     tight: false,
@@ -363,124 +380,117 @@
   // LINK AND REFERENCE STYLING
   // ==========================================================================
 
-  // External link styling
-  show link: it => [
-    #h(0.3em)
-    #set text(weight: "regular")
-    #box(
-      [#it],
-      stroke: main_color + 0.04em,
-      fill: main_color.lighten(90%),
-      outset: 0.2em,
-      radius: 0.2em,
-    )
-    #h(0.3em)
-  ]
+  // URLs and cross-references navy; citation numbers (links to <ref-*>) in
+  // bold Plex Sans so they read apart from the serif text.
+  show link: it => {
+    if type(it.dest) == label and str(it.dest).starts-with("ref-") {
+      text(font: ms-sans-semi, weight: 600, fill: ms-signal, it)
+    } else {
+      text(fill: ms-petrol, it)
+    }
+  }
 
-  // Cross-reference styling
-  show ref: it => [
-    #set text(weight: "regular")
-    #box(
-      [#it],
-      stroke: (
-        bottom: (paint: accent_color, thickness: 0.1em, dash: "solid"),
-      ),
-      fill: main_color.lighten(50%),
-    )
-  ]
+  // Cross-references to figures and tables: "Table 3" as one link
+  show ref: it => {
+    let el = it.element
+    if el != none and el.func() == figure {
+      let sup = if it.supplement == auto { el.supplement } else { it.supplement }
+      link(el.location(), context [#sup~#numbering(el.numbering, ..el.counter.at(el.location()))])
+    } else { it }
+  }
+
+  // Pandoc citeproc emits #super[#link(<ref-key>)[n]]
+  set super(size: 0.68em, baseline: -0.42em)
 
   // ==========================================================================
   // HEADING HIERARCHY
   // ==========================================================================
 
-  set heading(numbering: "1.1.")
+  set heading(numbering: "1.1")
 
-  // Level 1: Main sections (large, uppercase, colored)
-  show heading.where(level: 1): it => [
-    #set text(
-      fill: secondary_color,
-      weight: 800,
-      size: 1.3em,
-      font: secondary_fonts,
-    )
-    #block(
-      smallcaps(it),
-      inset: (top: 0.5em, bottom: 0.5em, rest: 0em),
-    )
-  ]
-
-  // Level 2: Subsections (medium, underlined, accent colored)
-  show heading.where(level: 2): it => [
-    #set text(
-      fill: accent_color.darken(50%),
-      weight: 500,
-      size: 1.1em,
-      font: secondary_fonts,
-    )
-    #block(
-      underline(smallcaps(it)),
-      inset: (top: 0.5em, bottom: 0.5em, rest: 0em),
-    )
-  ]
-
-  // Level 3: Sub-subsections (small caps, dark blue)
-  show heading.where(level: 3): it => [
-    #set text(
-      fill: dark_blue.darken(50%),
-      weight: 400,
-      size: 1em,
-      font: secondary_fonts,
-    )
-    #block(
-      smallcaps(it),
-      inset: (top: 0.5em, bottom: 0.5em, rest: 0em),
-    )
-  ]
-
-  // Levels 4-8: Standard styling (dark text, normal weight)
-  show heading.where(level: 4): set text(fill: dark_text, weight: 300, size: 1em)
-  show heading.where(level: 5): set text(fill: dark_text, weight: 300, size: 1em)
-  show heading.where(level: 6): set text(fill: dark_text, weight: 300, size: 1em)
-  show heading.where(level: 7): set text(fill: dark_text, weight: 300, size: 1em)
-  show heading.where(level: 8): set text(fill: dark_text, weight: 300, size: 1em)
-
-  // ==========================================================================
-  // FIGURE AND TABLE STYLING
-  // ==========================================================================
-
-  // Figure caption styling
-  show figure.caption: it => {
-    set text(fill: cover_page_text, weight: 400, size: 1em)
-    block(it, inset: (left: 5em, right: 5em, top: 0em, bottom: 0em))
+  show heading.where(level: 1): it => {
+    set par(justify: false, leading: 0.4em)
+    set text(font: ms-sans-semi, weight: 600, size: 15pt, fill: ms-petrol)
+    // Unnumbered "Annex ..." headings get a closing rule: annexes read as a
+    // separate register from the numbered report sections.
+    let annex = it.numbering == none and ms-plain(it.body).starts-with("Annex")
+    block(above: 2.3em, below: 1.1em, sticky: true, width: 100%)[
+      #if it.numbering != none {
+        ms-hung(text(context counter(heading).display(it.numbering)))
+      }
+      #it.body
+      #if annex {
+        v(-0.35em)
+        line(length: 100%, stroke: 0.7pt + ms-petrol)
+      }
+    ]
   }
 
-  // Table-specific settings
-  show figure.where(kind: table): set figure.caption(position: top)
-  show figure.where(kind: table): set block(breakable: false)
-  show table.cell: set text(size: 0.8em)
-
-  // Quarto table compatibility
-  show figure.where(kind: "quarto-float-tbl"): set block(breakable: true)
-  show figure.where(kind: "quarto-float-tbl"): set table.header(repeat: true)
-
-  // Table styling with alternating row colors
-  set table(
-    fill: (_, y) => {
-      if calc.odd(y) {
-        // Odd rows: light accent
-        return accent_color.lighten(90%).desaturate(90%)
-      } else if y == 0 {
-        // Header row: primary color
-        return main_color.lighten(10%).desaturate(5%)
+  show heading.where(level: 2): it => {
+    set par(justify: false, leading: 0.4em)
+    set text(font: ms-sans-semi, weight: 600, size: 11pt, fill: ms-petrol)
+    block(above: 1.8em, below: 0.8em, sticky: true, width: 100%)[
+      #if it.numbering != none {
+        ms-hung(text(context counter(heading).display(it.numbering)))
       }
-    },
-    inset: 0.7em,
-    stroke: (x, y) => (
-      x: none, // No vertical lines
-      top: if y <= 1 { 0.5pt } else { 0pt }, // Top line for header
-      bottom: 0.5pt, // Bottom line for all rows
+      #it.body
+    ]
+  }
+
+  show heading.where(level: 3): it => {
+    set par(justify: false)
+    set text(font: ms-sans-semi, weight: 600, size: 9.5pt, fill: ms-petrol)
+    // Reserve room for what follows (often a long table whose first row
+    // would otherwise go to the next page and leave the heading orphaned).
+    let room = 7em
+    block(above: 1.5em, below: 0.6em, sticky: true, breakable: false)[
+      #if it.numbering != none {
+        ms-hung(text(context counter(heading).display(it.numbering)))
+      }
+      #it.body
+      #v(room)
+    ]
+    v(-room)
+  }
+
+  show heading: set text(font: ms-sans, weight: 500, size: ms-body-size, fill: ms-ink)
+
+  // ==========================================================================
+  // FIGURES, TABLES, CAPTIONS
+  // ==========================================================================
+  show figure.caption: it => {
+    set text(fill: dark_text, weight: 400, size: 1em)
+    // sticky + unbreakable: a caption never ends a page apart from its table
+    block(it, inset: (left: 5em, right: 5em, top: 0em, bottom: 0em), breakable: false, sticky: true)
+  }
+  set figure(gap: 0.6em)
+  show figure: set block(above: 1.5em, below: 1.4em)
+
+  // Tables: caption on top. Tables taller than ms-keep-table break between
+  // rows (never inside one) and repeat their header, so long tables do not
+  // leave part-empty pages; shorter tables stay whole.
+  show figure.where(kind: table): set figure.caption(position: top)
+  show figure.where(kind: "quarto-float-tbl"): set block(breakable: true)
+  show figure.where(kind: "quarto-float-tbl"): it => context {
+    let w = page.width - ms-margin.left - ms-margin.right
+    if measure(it, width: w).height > ms-keep-table { it } else { block(breakable: false, it) }
+  }
+  set table.cell(breakable: false)
+  show table: set par(justify: false, leading: 0.5em)
+  show table: set text(font: ms-sans, size: ms-table-size, number-type: "lining", number-width: "tabular")
+  show table.cell.where(y: 0): set text(weight: 700, fill: ms-petrol)
+  set table.hline(stroke: 0.7pt + ms-petrol)
+  set table(
+    inset: (x: 5pt, y: 4.2pt),
+    fill: (_, y) => if y == 0 { ms-tint },
+    stroke: (_, y) => (
+      top: if y == 0 { 0.7pt + ms-petrol } else { 0.4pt + ms-rule },
+      x: none,
     ),
   )
+  // Closing rule under every table
+  // (block sized to the table, so narrow tables get a rule of their own width)
+  show table: it => block(stroke: (bottom: 0.7pt + ms-petrol), it)
 
   // ==========================================================================
   // TABLE OF CONTENTS
@@ -529,15 +539,6 @@
   // ==========================================================================
 
   body
-
-  // ==========================================================================
-  // BIBLIOGRAPHY
-  // ==========================================================================
-
-  if bibliography != none {
-    pagebreak()
-    bibliography
-  }
 
   // ==========================================================================
   // LIST OF FIGURES AND TABLES

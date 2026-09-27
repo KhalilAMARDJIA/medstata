@@ -128,3 +128,9 @@ Colors are defined at the top of `_extensions/medstata/typst-template.typ`:
 ```
 
 Edit these to match your organization's brand.
+
+## Word output
+
+The extension also provides `medstata-docx`, using `_extensions/medstata/reference.docx` (Libertinus Serif body, IBM Plex Sans headings and tables, running header with chapter, short title and version, footer with author and page X of Y). Rebuild the reference document with `python3 _extensions/medstata/make_reference_docx.py`. After rendering, run `python3 _extensions/medstata/make_reference_docx.py --fix report.docx` to fill the header and footer values, set table text and restore headers on landscape sections.
+
+Optional YAML: `short-title` (running header; defaults to the title).
